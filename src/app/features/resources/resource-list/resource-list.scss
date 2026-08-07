@@ -1,0 +1,43 @@
+.resource-list-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #f44336);
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.resource-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.hours {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant, #666);
+  margin-top: 8px;
+}
+
+mat-chip.available {
+  --mdc-chip-elevated-container-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+mat-chip.unavailable {
+  --mdc-chip-elevated-container-color: #ffebee;
+  color: #c62828;
+}

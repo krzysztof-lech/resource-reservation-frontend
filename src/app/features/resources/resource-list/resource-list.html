@@ -1,0 +1,44 @@
+<div class="resource-list-container">
+  <h1>Resources</h1>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else if (errorMessage()) {
+    <p class="error-message">{{ errorMessage() }}</p>
+  } @else if (resources().length === 0) {
+    <p>No resources available.</p>
+  } @else {
+    <div class="resource-grid">
+      @for (resource of resources(); track resource.id) {
+        <mat-card class="resource-card">
+          <mat-card-header>
+            <mat-card-title>{{ resource.name }}</mat-card-title>
+            @if (resource.categoryName) {
+              <mat-card-subtitle>{{ resource.categoryName }}</mat-card-subtitle>
+            }
+          </mat-card-header>
+
+          <mat-card-content>
+            @if (resource.description) {
+              <p>{{ resource.description }}</p>
+            }
+            <mat-chip-set>
+              <mat-chip [class.available]="resource.isAvailable" [class.unavailable]="!resource.isAvailable">
+                {{ resource.isAvailable ? 'Available' : 'Unavailable' }}
+              </mat-chip>
+            </mat-chip-set>
+            <p class="hours">{{ resource.availableFrom }} - {{ resource.availableTo }}</p>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-button color="primary" (click)="viewDetails(resource.id)">
+              View details
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+  }
+</div>
