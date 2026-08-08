@@ -21,7 +21,10 @@ export class NavBar {
   authService = inject(AuthService);
 
   logout(): void {
+    const confirmed = confirm('Are you sure you want to log out?');
+    if (!confirmed) return;
+
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/resources']);
   }
 }

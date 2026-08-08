@@ -1,87 +1,72 @@
 <div class="resource-detail-container">
-  @if (loading()) {
+    @if (loading()) {
     <div class="loading-container">
-      <mat-spinner diameter="40"></mat-spinner>
+        <mat-spinner diameter="40"></mat-spinner>
     </div>
-  } @else if (errorMessage()) {
+    } @else if (errorMessage()) {
     <p class="error-message">{{ errorMessage() }}</p>
-  } @else if (resource(); as res) {
+    } @else if (resource(); as res) {
     <mat-card class="resource-info-card">
-      <mat-card-header>
-        <mat-card-title>{{ res.name }}</mat-card-title>
-        @if (res.categoryName) {
-          <mat-card-subtitle>{{ res.categoryName }}</mat-card-subtitle>
-        }
-      </mat-card-header>
-      <mat-card-content>
-        @if (res.description) {
-          <p>{{ res.description }}</p>
-        }
-        <mat-chip-set>
-          <mat-chip [class.available]="res.isAvailable" [class.unavailable]="!res.isAvailable">
-            {{ res.isAvailable ? 'Available' : 'Unavailable' }}
-          </mat-chip>
-        </mat-chip-set>
-        <p class="hours">Working hours: {{ formatResourceTime(res.availableFrom) }} - {{ formatResourceTime(res.availableTo) }}</p>
-        <p class="slot-info">Slot duration: {{ res.slotDurationMinutes }} minutes</p>
-      </mat-card-content>
+        <mat-card-header>
+            <mat-card-title>{{ res.name }}</mat-card-title>
+            @if (res.categoryName) {
+            <mat-card-subtitle>{{ res.categoryName }}</mat-card-subtitle>
+            }
+        </mat-card-header>
+        <mat-card-content>
+            @if (res.description) {
+            <p>{{ res.description }}</p>
+            }
+            @if (!res.isAvailable) {
+            <mat-chip-set>
+                <mat-chip class="unavailable">Unavailable</mat-chip>
+            </mat-chip-set>
+            }
+            <p class="hours">Working hours: {{ formatResourceTime(res.availableFrom) }} - {{
+                formatResourceTime(res.availableTo) }}</p>
+            <p class="slot-info">Slot duration: {{ res.slotDurationMinutes }} minutes</p>
+        </mat-card-content>
     </mat-card>
 
     <mat-card class="availability-card">
-      <mat-card-header>
-        <mat-card-title>Check availability</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-form-field appearance="outline">
-          <mat-label>Choose a date</mat-label>
-          <input
-            matInput
-            [matDatepicker]="picker"
-            [ngModel]="selectedDate()"
-            (ngModelChange)="onDateChange($event)"
-            [min]="minDate"
-          />
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+        <mat-card-header>
+            <mat-card-title>Check availability</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field appearance="outline">
+                <mat-label>Choose a date</mat-label>
+                <input matInput [matDatepicker]="picker" [ngModel]="selectedDate()"
+                    (ngModelChange)="onDateChange($event)" [min]="minDate" />
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
 
-        @if (slots().length === 0) {
-          <p class="no-slots">Resource is not available on this day.</p>
-        } @else {
-          <div class="slot-grid">
-            @for (slot of slots(); track slot.label) {
-              <button
-                type="button"
-                class="slot-button"
-                [class.selected]="selectedSlot() === slot"
-                [class.unavailable]="!slot.isAvailable"
-                [disabled]="!slot.isAvailable"
-                (click)="selectSlot(slot)"
-              >
-                {{ slot.label }}
-              </button>
+            @if (slots().length === 0) {
+            <p class="no-slots">Resource is not available on this day.</p>
+            } @else {
+            <div class="slot-grid">
+                @for (slot of slots(); track slot.label) {
+                <button type="button" class="slot-button" [class.selected]="selectedSlot() === slot"
+                    [class.unavailable]="!slot.isAvailable" [disabled]="!slot.isAvailable" (click)="selectSlot(slot)">
+                    {{ slot.label }}
+                </button>
+                }
+            </div>
             }
-          </div>
-        }
 
-        @if (selectedSlot(); as slot) {
-          <div class="confirm-section">
-            <p>Selected: <strong>{{ slot.label }}</strong></p>
-            <button
-              mat-flat-button
-              color="primary"
-              [disabled]="submitting()"
-              (click)="confirmReservation()"
-            >
-              @if (submitting()) {
-                <mat-spinner diameter="20"></mat-spinner>
-              } @else {
-                Confirm reservation
-              }
-            </button>
-          </div>
-        }
-      </mat-card-content>
+            @if (selectedSlot(); as slot) {
+            <div class="confirm-section">
+                <p>Selected: <strong>{{ slot.label }}</strong></p>
+                <button mat-flat-button color="primary" [disabled]="submitting()" (click)="confirmReservation()">
+                    @if (submitting()) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                    } @else {
+                    Confirm reservation
+                    }
+                </button>
+            </div>
+            }
+        </mat-card-content>
     </mat-card>
-  }
+    }
 </div>
