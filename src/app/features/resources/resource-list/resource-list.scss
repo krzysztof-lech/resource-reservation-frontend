@@ -24,17 +24,19 @@
 .resource-card {
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
 }
 
 .hours {
   font-size: 0.875rem;
   color: var(--mat-sys-on-surface-variant, #666);
   margin-top: 8px;
-}
-
-mat-chip.available {
-  --mdc-chip-elevated-container-color: #e8f5e9;
-  color: #2e7d32;
 }
 
 mat-chip.unavailable {

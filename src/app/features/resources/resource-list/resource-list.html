@@ -12,7 +12,7 @@
   } @else {
   <div class="resource-grid">
     @for (resource of resources(); track resource.id) {
-    <mat-card class="resource-card">
+    <mat-card class="resource-card" (click)="viewDetails(resource.id)">
       <mat-card-header>
         <mat-card-title>{{ resource.name }}</mat-card-title>
         @if (resource.categoryName) {
@@ -31,12 +31,6 @@
         }
         <p class="hours">{{ formatTime(resource.availableFrom) }} - {{ formatTime(resource.availableTo) }}</p>
       </mat-card-content>
-
-      <mat-card-actions>
-        <button mat-button color="primary" (click)="viewDetails(resource.id)">
-          View details
-        </button>
-      </mat-card-actions>
     </mat-card>
     }
   </div>
