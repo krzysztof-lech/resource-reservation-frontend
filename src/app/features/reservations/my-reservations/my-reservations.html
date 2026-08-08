@@ -1,0 +1,47 @@
+<div class="my-reservations-container">
+  <h1>My Reservations</h1>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else if (errorMessage()) {
+    <p class="error-message">{{ errorMessage() }}</p>
+  } @else if (reservations().length === 0) {
+    <p>You have no reservations yet.</p>
+  } @else {
+    <div class="reservation-list">
+      @for (reservation of reservations(); track reservation.id) {
+        <mat-card class="reservation-card">
+          <mat-card-header>
+            <mat-card-title>{{ reservation.resourceName }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ reservation.startTime | date:'mediumDate' }}, {{ reservation.startTime | date:'shortTime' }} - {{ reservation.endTime | date:'shortTime' }}</p>
+            <mat-chip-set>
+              <mat-chip [class]="'status-' + reservation.status.toLowerCase()">
+                {{ reservation.status }}
+              </mat-chip>
+            </mat-chip-set>
+          </mat-card-content>
+          @if (canCancel(reservation)) {
+            <mat-card-actions>
+              <button
+                mat-button
+                color="warn"
+                [disabled]="cancellingId() === reservation.id"
+                (click)="cancelReservation(reservation.id)"
+              >
+                @if (cancellingId() === reservation.id) {
+                  <mat-spinner diameter="16"></mat-spinner>
+                } @else {
+                  Cancel
+                }
+              </button>
+            </mat-card-actions>
+          }
+        </mat-card>
+      }
+    </div>
+  }
+</div>

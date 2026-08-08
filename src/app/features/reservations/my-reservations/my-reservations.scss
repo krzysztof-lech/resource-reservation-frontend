@@ -1,0 +1,41 @@
+.my-reservations-container {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #f44336);
+}
+
+.reservation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.reservation-card {
+  width: 100%;
+}
+
+mat-chip.status-pending {
+  --mdc-chip-elevated-container-color: #fff3e0;
+  color: #e65100;
+}
+
+mat-chip.status-confirmed {
+  --mdc-chip-elevated-container-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+mat-chip.status-cancelled {
+  --mdc-chip-elevated-container-color: #ffebee;
+  color: #c62828;
+}
