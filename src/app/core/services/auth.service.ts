@@ -7,7 +7,7 @@ import { LoginDto, TokenDto } from '../../models/auth.model';
 import { UserRole } from '../../models/user.model';
 
 const TOKEN_KEY = 'auth_token';
-const ROLE_CLAIM = 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role';
+const ROLE_CLAIM = 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
 
 interface DecodedToken {
   sub: string;

@@ -1,0 +1,20 @@
+@if (authService.isAuthenticated()) {
+  <mat-toolbar color="primary">
+    <span class="brand">Resource Reservation</span>
+
+    <span class="spacer"></span>
+
+    <a mat-button routerLink="/resources">Resources</a>
+    <a mat-button routerLink="/reservations/my">My Reservations</a>
+
+    @if (authService.isAdmin()) {
+      <a mat-button routerLink="/admin">Admin</a>
+    }
+
+    <span class="user-email">{{ authService.userEmail() }}</span>
+
+    <button mat-icon-button (click)="logout()" aria-label="Logout" title="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+}
