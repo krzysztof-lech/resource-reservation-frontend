@@ -44,4 +44,8 @@ export class ResourceList implements OnInit {
   viewDetails(id: string): void {
     this.router.navigate(['/resources', id]);
   }
+
+  formatTime(time: string): string {
+    return time.slice(0, 5);
+  }
 }

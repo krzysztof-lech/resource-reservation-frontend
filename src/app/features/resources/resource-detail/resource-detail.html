@@ -22,7 +22,7 @@
             {{ res.isAvailable ? 'Available' : 'Unavailable' }}
           </mat-chip>
         </mat-chip-set>
-        <p class="hours">Working hours: {{ res.availableFrom }} - {{ res.availableTo }}</p>
+        <p class="hours">Working hours: {{ formatResourceTime(res.availableFrom) }} - {{ formatResourceTime(res.availableTo) }}</p>
         <p class="slot-info">Slot duration: {{ res.slotDurationMinutes }} minutes</p>
       </mat-card-content>
     </mat-card>
