@@ -14,6 +14,7 @@ import { ReservationService } from '../../../core/services/reservation.service';
 import { ResourceReadDto } from '../../../models/resource.model';
 import { IReservationReadDto } from '../../../models/reservation.model';
 import { AuthService } from '../../../core/services/auth.service';
+import { DatePipe } from '@angular/common';
 
 interface TimeSlot {
   start: Date;
@@ -32,7 +33,8 @@ interface TimeSlot {
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    DatePipe
   ],
   templateUrl: './resource-detail.html',
   styleUrl: './resource-detail.scss',

@@ -40,6 +40,7 @@
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
+            <p class="day-of-week">{{ selectedDate() | date:'EEEE' }}</p>
 
             @if (slots().length === 0) {
             <p class="no-slots">Resource is not available on this day.</p>
