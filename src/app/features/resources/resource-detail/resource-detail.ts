@@ -63,7 +63,33 @@ export class ResourceDetail implements OnInit {
     const res = this.resource();
     const date = this.selectedDate();
     if (!res) return [];
+    return this.computeSlotsForDate(res, date);
+  });
 
+  nextFreeDate = computed<Date | null>(() => {
+    const res = this.resource();
+    if (!res) return null;
+    if (this.slots().some(s => s.isAvailable)) return null;
+
+    const start = new Date(this.selectedDate());
+    start.setHours(0, 0, 0, 0);
+
+    for (let i = 1; i <= 60; i++) {
+      const candidate = new Date(start);
+      candidate.setDate(start.getDate() + i);
+
+      if (!res.allowedDays.includes(candidate.getDay())) continue;
+
+      const candidateSlots = this.computeSlotsForDate(res, candidate);
+      if (candidateSlots.some(s => s.isAvailable)) {
+        return candidate;
+      }
+    }
+
+    return null;
+  });
+
+  private computeSlotsForDate(res: ResourceReadDto, date: Date): TimeSlot[] {
     const dayOfWeek = date.getDay();
     if (!res.allowedDays.includes(dayOfWeek)) return [];
 
@@ -107,7 +133,7 @@ export class ResourceDetail implements OnInit {
     }
 
     return result;
-  });
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -171,6 +197,11 @@ export class ResourceDetail implements OnInit {
       this.selectedDate.set(date);
       this.selectedSlots.set([]);
     }
+  }
+
+  goToSuggestedDate(date: Date): void {
+    this.selectedDate.set(date);
+    this.selectedSlots.set([]);
   }
 
   selectSlot(slot: TimeSlot): void {

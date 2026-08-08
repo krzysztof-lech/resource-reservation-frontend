@@ -42,9 +42,24 @@
             </mat-form-field>
             <p class="day-of-week">{{ selectedDate() | date:'EEEE' }}</p>
 
-            @if (slots().length === 0) {
-            <p class="no-slots">Resource is not available on this day.</p>
-            } @else {
+            @if (!slots().some(s => s.isAvailable)) {
+            <p class="no-slots">
+                @if (slots().length === 0) {
+                Resource is not available on this day.
+                } @else {
+                All slots on this day are booked.
+                }
+            </p>
+            @if (nextFreeDate(); as suggestion) {
+            <p class="suggestion">
+                Next available:
+                <button type="button" class="suggestion-link" (click)="goToSuggestedDate(suggestion)">
+                    {{ suggestion | date:'EEEE, MMMM d' }}
+                </button>
+            </p>
+            }
+            }
+            @if (slots().length > 0) {
             <div class="slot-grid">
                 @for (slot of slots(); track slot.label) {
                 <button type="button" class="slot-button" [class.selected]="isSlotSelected(slot)"
@@ -56,16 +71,16 @@
             }
 
             @if (selectionRange(); as range) {
-                <div class="confirm-section">
-                    <p>Selected: <strong>{{ range.label }}</strong></p>
-                    <button mat-flat-button color="primary" [disabled]="submitting()" (click)="confirmReservation()">
-                        @if (submitting()) {
-                        <mat-spinner diameter="20"></mat-spinner>
-                        } @else {
-                        Confirm reservation
-                        }
-                    </button>
-                </div>
+            <div class="confirm-section">
+                <p>Selected: <strong>{{ range.label }}</strong></p>
+                <button mat-flat-button color="primary" [disabled]="submitting()" (click)="confirmReservation()">
+                    @if (submitting()) {
+                    <mat-spinner diameter="20"></mat-spinner>
+                    } @else {
+                    Confirm reservation
+                    }
+                </button>
+            </div>
             }
         </mat-card-content>
     </mat-card>
