@@ -1,10 +1,11 @@
-@if (authService.isAuthenticated()) {
-  <mat-toolbar color="primary">
-    <span class="brand">Resource Reservation</span>
+<mat-toolbar color="primary">
+  <span class="brand">Resource Reservation</span>
 
-    <span class="spacer"></span>
+  <span class="spacer"></span>
 
-    <a mat-button routerLink="/resources">Resources</a>
+  <a mat-button routerLink="/resources">Resources</a>
+
+  @if (authService.isAuthenticated()) {
     <a mat-button routerLink="/reservations/my">My Reservations</a>
 
     @if (authService.isAdmin()) {
@@ -16,5 +17,7 @@
     <button mat-icon-button (click)="logout()" aria-label="Logout" title="Logout">
       <mat-icon>logout</mat-icon>
     </button>
-  </mat-toolbar>
-}
+  } @else {
+    <a mat-button routerLink="/login">Login</a>
+  }
+</mat-toolbar>
