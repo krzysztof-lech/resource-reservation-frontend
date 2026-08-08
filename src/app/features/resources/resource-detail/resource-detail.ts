@@ -53,7 +53,7 @@ export class ResourceDetail implements OnInit {
 
   selectedDate = signal<Date>(new Date());
   minDate = new Date();
-  selectedSlot = signal<TimeSlot | null>(null);
+  selectedSlots = signal<TimeSlot[]>([]);
 
   resourceId = '';
 
@@ -130,11 +130,11 @@ export class ResourceDetail implements OnInit {
 
         if (startParam && endParam) {
           setTimeout(() => {
-            const matchingSlot = this.slots().find(
-              s => this.toLocalIso(s.start) === startParam && this.toLocalIso(s.end) === endParam
+            const matchingSlots = this.slots().filter(
+              s => s.start >= new Date(startParam) && s.end <= new Date(endParam) && s.isAvailable
             );
-            if (matchingSlot?.isAvailable) {
-              this.selectedSlot.set(matchingSlot);
+            if (matchingSlots.length > 0) {
+              this.selectedSlots.set(matchingSlots);
             }
           });
         }
@@ -162,22 +162,45 @@ export class ResourceDetail implements OnInit {
   onDateChange(date: Date | null): void {
     if (date) {
       this.selectedDate.set(date);
-      this.selectedSlot.set(null);
+      this.selectedSlots.set([]);
     }
   }
 
   selectSlot(slot: TimeSlot): void {
     if (!slot.isAvailable) return;
-    this.selectedSlot.set(slot);
+
+    const current = this.selectedSlots();
+    const index = current.findIndex(s => s.start.getTime() === slot.start.getTime());
+
+    if (index !== -1) {
+      this.selectedSlots.set(current.slice(0, index));
+      return;
+    }
+
+    if (current.length === 0) {
+      this.selectedSlots.set([slot]);
+      return;
+    }
+
+    const first = current[0];
+    const last = current[current.length - 1];
+
+    if (slot.end.getTime() === first.start.getTime()) {
+      this.selectedSlots.set([slot, ...current]);
+    } else if (slot.start.getTime() === last.end.getTime()) {
+      this.selectedSlots.set([...current, slot]);
+    } else {
+      this.selectedSlots.set([slot]);
+    }
   }
 
   confirmReservation(): void {
-    const slot = this.selectedSlot();
+    const range = this.selectionRange();
     const res = this.resource();
-    if (!slot || !res) return;
+    if (!range || !res) return;
 
     if (!this.authService.isAuthenticated()) {
-      const returnUrl = `/resources/${res.id}?date=${this.toLocalIso(slot.start).slice(0, 10)}&start=${this.toLocalIso(slot.start)}&end=${this.toLocalIso(slot.end)}`;
+      const returnUrl = `/resources/${res.id}?date=${this.toLocalIso(range.start).slice(0, 10)}&start=${this.toLocalIso(range.start)}&end=${this.toLocalIso(range.end)}`;
       this.router.navigate(['/login'], {
         queryParams: { returnUrl }
       });
@@ -188,8 +211,8 @@ export class ResourceDetail implements OnInit {
 
     this.reservationService.create({
       resourceId: res.id,
-      startTime: this.toLocalIso(slot.start),
-      endTime: this.toLocalIso(slot.end)
+      startTime: this.toLocalIso(range.start),
+      endTime: this.toLocalIso(range.end),
     }).subscribe({
       next: () => {
         this.submitting.set(false);
@@ -222,4 +245,18 @@ export class ResourceDetail implements OnInit {
   formatResourceTime(time: string): string {
     return time.slice(0, 5);
   }
+
+  isSlotSelected(slot: TimeSlot): boolean {
+    return this.selectedSlots().some(s => s.start.getTime() === slot.start.getTime());
+  }
+
+  selectionRange = computed(() => {
+    const slots = this.selectedSlots();
+    if (slots.length === 0) return null;
+    return {
+      start: slots[0].start,
+      end: slots[slots.length - 1].end,
+      label: `${this.formatTime(slots[0].start)} - ${this.formatTime(slots[slots.length - 1].end)}`
+    };
+  });
 }

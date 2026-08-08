@@ -46,7 +46,7 @@
             } @else {
             <div class="slot-grid">
                 @for (slot of slots(); track slot.label) {
-                <button type="button" class="slot-button" [class.selected]="selectedSlot() === slot"
+                <button type="button" class="slot-button" [class.selected]="isSlotSelected(slot)"
                     [class.unavailable]="!slot.isAvailable" [disabled]="!slot.isAvailable" (click)="selectSlot(slot)">
                     {{ slot.label }}
                 </button>
@@ -54,17 +54,17 @@
             </div>
             }
 
-            @if (selectedSlot(); as slot) {
-            <div class="confirm-section">
-                <p>Selected: <strong>{{ slot.label }}</strong></p>
-                <button mat-flat-button color="primary" [disabled]="submitting()" (click)="confirmReservation()">
-                    @if (submitting()) {
-                    <mat-spinner diameter="20"></mat-spinner>
-                    } @else {
-                    Confirm reservation
-                    }
-                </button>
-            </div>
+            @if (selectionRange(); as range) {
+                <div class="confirm-section">
+                    <p>Selected: <strong>{{ range.label }}</strong></p>
+                    <button mat-flat-button color="primary" [disabled]="submitting()" (click)="confirmReservation()">
+                        @if (submitting()) {
+                        <mat-spinner diameter="20"></mat-spinner>
+                        } @else {
+                        Confirm reservation
+                        }
+                    </button>
+                </div>
             }
         </mat-card-content>
     </mat-card>
