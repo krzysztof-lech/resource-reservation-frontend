@@ -126,6 +126,11 @@ export class ResourceDetail implements OnInit {
     this.resourceService.getById(id).subscribe({
       next: (data) => {
         this.resource.set(data);
+
+        if (!dateParam) {
+          this.selectedDate.set(this.findNextAvailableDate(data.allowedDays));
+        }
+
         this.loadReservations();
 
         if (startParam && endParam) {
@@ -259,4 +264,19 @@ export class ResourceDetail implements OnInit {
       label: `${this.formatTime(slots[0].start)} - ${this.formatTime(slots[slots.length - 1].end)}`
     };
   });
+
+  private findNextAvailableDate(allowedDays: number[]): Date {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (let i = 0; i < 14; i++) {
+      const candidate = new Date(today);
+      candidate.setDate(today.getDate() + i);
+      if (allowedDays.includes(candidate.getDay())) {
+        return candidate;
+      }
+    }
+
+    return today;
+  }
 }
