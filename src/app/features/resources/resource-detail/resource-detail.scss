@@ -1,0 +1,80 @@
+.resource-detail-container {
+  padding: 24px;
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #f44336);
+}
+
+.hours,
+.slot-info {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant, #666);
+  margin-top: 4px;
+}
+
+mat-chip.available {
+  --mdc-chip-elevated-container-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+mat-chip.unavailable {
+  --mdc-chip-elevated-container-color: #ffebee;
+  color: #c62828;
+}
+
+.no-slots {
+  color: var(--mat-sys-on-surface-variant, #666);
+  margin-top: 16px;
+}
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.slot-button {
+  padding: 10px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  cursor: pointer;
+  font-size: 0.875rem;
+
+  &:hover:not(.unavailable) {
+    background: #c8e6c9;
+  }
+
+  &.selected {
+    background: #1976d2;
+    color: white;
+    border-color: #1976d2;
+  }
+
+  &.unavailable {
+    background: #ffebee;
+    color: #c62828;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+}
+
+.confirm-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}

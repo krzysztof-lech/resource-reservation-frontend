@@ -1,5 +1,16 @@
 export type ReservationStatus = 'Pending' | 'Confirmed' | 'Cancelled';
 
+export interface IReservationReadDto {
+  id: string;
+  resourceId: string;
+  resourceName: string;
+  startTime: string;
+  endTime: string;
+  status: ReservationStatus;
+  userId?: string;
+  userEmail?: string;
+}
+
 export interface CreateReservationDto {
   resourceId: string;
   startTime: string;
