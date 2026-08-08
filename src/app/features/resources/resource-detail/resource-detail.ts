@@ -13,6 +13,7 @@ import { ResourceService } from '../../../core/services/resource.service';
 import { ReservationService } from '../../../core/services/reservation.service';
 import { ResourceReadDto } from '../../../models/resource.model';
 import { IReservationReadDto } from '../../../models/reservation.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 interface TimeSlot {
   start: Date;
@@ -42,6 +43,7 @@ export class ResourceDetail implements OnInit {
   private resourceService = inject(ResourceService);
   private reservationService = inject(ReservationService);
   private snackBar = inject(MatSnackBar);
+  private authService = inject(AuthService);
 
   resource = signal<ResourceReadDto | null>(null);
   allReservations = signal<IReservationReadDto[]>([]);
@@ -113,10 +115,29 @@ export class ResourceDetail implements OnInit {
     }
     this.resourceId = id;
 
+    const dateParam = this.route.snapshot.queryParamMap.get('date');
+    const startParam = this.route.snapshot.queryParamMap.get('start');
+    const endParam = this.route.snapshot.queryParamMap.get('end');
+
+    if (dateParam) {
+      this.selectedDate.set(new Date(dateParam));
+    }
+
     this.resourceService.getById(id).subscribe({
       next: (data) => {
         this.resource.set(data);
         this.loadReservations();
+
+        if (startParam && endParam) {
+          setTimeout(() => {
+            const matchingSlot = this.slots().find(
+              s => this.toLocalIso(s.start) === startParam && this.toLocalIso(s.end) === endParam
+            );
+            if (matchingSlot?.isAvailable) {
+              this.selectedSlot.set(matchingSlot);
+            }
+          });
+        }
       },
       error: () => {
         this.errorMessage.set('Failed to load resource.');
@@ -155,12 +176,20 @@ export class ResourceDetail implements OnInit {
     const res = this.resource();
     if (!slot || !res) return;
 
+    if (!this.authService.isAuthenticated()) {
+      const returnUrl = `/resources/${res.id}?date=${this.toLocalIso(slot.start).slice(0, 10)}&start=${this.toLocalIso(slot.start)}&end=${this.toLocalIso(slot.end)}`;
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl }
+      });
+      return;
+    }
+
     this.submitting.set(true);
 
     this.reservationService.create({
       resourceId: res.id,
       startTime: this.toLocalIso(slot.start),
-      endTime: this.toLocalIso(slot.end),
+      endTime: this.toLocalIso(slot.end)
     }).subscribe({
       next: () => {
         this.submitting.set(false);
