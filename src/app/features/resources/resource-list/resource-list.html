@@ -24,11 +24,6 @@
         @if (resource.description) {
         <p>{{ resource.description }}</p>
         }
-        @if (!resource.isAvailable) {
-        <mat-chip-set>
-          <mat-chip class="unavailable">Unavailable</mat-chip>
-        </mat-chip-set>
-        }
         <p class="hours">{{ formatTime(resource.availableFrom) }} - {{ formatTime(resource.availableTo) }}</p>
       </mat-card-content>
     </mat-card>

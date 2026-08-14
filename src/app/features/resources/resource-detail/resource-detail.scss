@@ -29,11 +29,6 @@ mat-chip.available {
   color: #2e7d32;
 }
 
-mat-chip.unavailable {
-  --mdc-chip-elevated-container-color: #ffebee;
-  color: #c62828;
-}
-
 .no-slots {
   color: var(--mat-sys-on-surface-variant, #666);
   margin-top: 16px;

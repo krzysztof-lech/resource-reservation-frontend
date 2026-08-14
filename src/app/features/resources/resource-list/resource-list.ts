@@ -31,7 +31,7 @@ export class ResourceList implements OnInit {
   ngOnInit(): void {
     this.resourceService.getAll().subscribe({
       next: (data) => {
-        this.resources.set(data);
+        this.resources.set(data.filter(r => r.isAvailable));
         this.loading.set(false);
       },
       error: () => {

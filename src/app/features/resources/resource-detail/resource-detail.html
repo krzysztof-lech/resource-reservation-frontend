@@ -17,11 +17,6 @@
             @if (res.description) {
             <p>{{ res.description }}</p>
             }
-            @if (!res.isAvailable) {
-            <mat-chip-set>
-                <mat-chip class="unavailable">Unavailable</mat-chip>
-            </mat-chip-set>
-            }
             <p class="hours">Working hours: {{ formatResourceTime(res.availableFrom) }} - {{
                 formatResourceTime(res.availableTo) }}</p>
             <p class="slot-info">Slot duration: {{ res.slotDurationMinutes }} minutes</p>
