@@ -1,1 +1,72 @@
-<p>admin-resource-new works!</p>
+<div class="admin-resource-new-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Add New Resource</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" />
+          @if (resourceForm.get('name')?.hasError('required') && resourceForm.get('name')?.touched) {
+            <mat-error>Name is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Category</mat-label>
+          <mat-select formControlName="categoryId">
+            <mat-option [value]="null">No category</mat-option>
+            @for (cat of categories(); track cat.id) {
+              <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div class="toggle-row">
+          <mat-slide-toggle formControlName="isAvailable">Available</mat-slide-toggle>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Slot duration (minutes)</mat-label>
+          <input matInput type="number" formControlName="slotDurationMinutes" />
+        </mat-form-field>
+
+        <div class="time-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Available from</mat-label>
+            <input matInput type="time" formControlName="availableFrom" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Available to</mat-label>
+            <input matInput type="time" formControlName="availableTo" />
+          </mat-form-field>
+        </div>
+
+        <p class="days-label">Allowed days</p>
+        <div class="days-row" formArrayName="allowedDays">
+          @for (day of days; track day.value; let i = $index) {
+            <mat-checkbox [formControlName]="i">{{ day.label }}</mat-checkbox>
+          }
+        </div>
+
+        <div class="actions">
+          <button mat-button type="button" (click)="cancel()">Cancel</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+            @if (submitting()) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              Create resource
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
