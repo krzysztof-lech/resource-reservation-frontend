@@ -1,1 +1,58 @@
-<p>admin-resources works!</p>
+<div class="admin-resources-container">
+  <div class="header-row">
+    <h1>Manage Resources</h1>
+    <button mat-flat-button color="primary" (click)="addNew()">
+      <mat-icon>add</mat-icon>
+      Add resource
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else if (errorMessage()) {
+    <p class="error-message">{{ errorMessage() }}</p>
+  } @else {
+    <table mat-table [dataSource]="resources()" class="resources-table">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let r">{{ r.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>Category</th>
+        <td mat-cell *matCellDef="let r">{{ r.categoryName || '—' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="hours">
+        <th mat-header-cell *matHeaderCellDef>Hours</th>
+        <td mat-cell *matCellDef="let r">{{ formatTime(r.availableFrom) }} - {{ formatTime(r.availableTo) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="available">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let r">
+          <mat-chip [class]="r.isAvailable ? 'available' : 'unavailable'">
+            {{ r.isAvailable ? 'Available' : 'Unavailable' }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let r">
+          <button mat-icon-button (click)="edit(r.id)" aria-label="Edit" title="Edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="delete(r)" aria-label="Delete" title="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  }
+</div>

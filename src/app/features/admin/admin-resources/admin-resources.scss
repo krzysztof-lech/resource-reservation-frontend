@@ -1,0 +1,38 @@
+.admin-resources-container {
+  padding: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #f44336);
+}
+
+.resources-table {
+  width: 100%;
+}
+
+mat-chip.available {
+  --mdc-chip-elevated-container-color: #e8f5e9;
+  color: #2e7d32;
+  pointer-events: none;
+}
+
+mat-chip.unavailable {
+  --mdc-chip-elevated-container-color: #ffebee;
+  color: #c62828;
+  pointer-events: none;
+}
