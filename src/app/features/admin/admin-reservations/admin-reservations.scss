@@ -1,0 +1,48 @@
+.admin-reservations-container {
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.filter-field {
+  width: 200px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #f44336);
+}
+
+.reservations-table {
+  width: 100%;
+}
+
+mat-chip.status-pending {
+  --mdc-chip-elevated-container-color: #fff3e0;
+  color: #e65100;
+  pointer-events: none;
+}
+
+mat-chip.status-confirmed {
+  --mdc-chip-elevated-container-color: #e8f5e9;
+  color: #2e7d32;
+  pointer-events: none;
+}
+
+mat-chip.status-cancelled {
+  --mdc-chip-elevated-container-color: #ffebee;
+  color: #c62828;
+  pointer-events: none;
+}
