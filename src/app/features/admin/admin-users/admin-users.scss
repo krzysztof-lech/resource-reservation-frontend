@@ -1,0 +1,35 @@
+.admin-users-container {
+  padding: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #f44336);
+}
+
+.users-table {
+  width: 100%;
+  margin-top: 16px;
+}
+
+mat-chip.role-admin,
+mat-chip.role-user {
+  pointer-events: none;
+}
+
+mat-chip.role-admin {
+  --mdc-chip-elevated-container-color: #e3f2fd;
+  color: #1565c0;
+}
+
+mat-chip.role-user {
+  --mdc-chip-elevated-container-color: #f5f5f5;
+  color: #616161;
+}
