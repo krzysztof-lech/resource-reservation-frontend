@@ -3,15 +3,27 @@
 
   <span class="spacer"></span>
 
-  <a mat-button routerLink="/resources">Resources</a>
+  @if (isAdminMode()) {
+    <a mat-button routerLink="/admin/resources">Resources</a>
+    <a mat-button routerLink="/admin/reservations">All Reservations</a>
+    <a mat-button routerLink="/admin/users">Users</a>
+    <a mat-button routerLink="/resources">
+      <mat-icon>arrow_back</mat-icon>
+    Exit Admin
+    </a>
+  } @else {
+    <a mat-button routerLink="/resources">Resources</a>
+
+    @if (authService.isAuthenticated()) {
+      <a mat-button routerLink="/reservations/my">My Reservations</a>
+
+      @if (authService.isAdmin()) {
+      <a mat-button routerLink="/admin">Admin</a>
+      }
+    }
+  }
 
   @if (authService.isAuthenticated()) {
-    <a mat-button routerLink="/reservations/my">My Reservations</a>
-
-    @if (authService.isAdmin()) {
-      <a mat-button routerLink="/admin">Admin</a>
-    }
-
     <span class="user-email">{{ authService.userEmail() }}</span>
 
     <button mat-icon-button (click)="logout()" aria-label="Logout" title="Logout">
