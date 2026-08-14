@@ -1,0 +1,54 @@
+.admin-resource-edit-container {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #f44336);
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.toggle-row {
+  margin: 16px 0;
+}
+
+.time-row {
+  display: flex;
+  gap: 16px;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.days-label {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant, #666);
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
+.days-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
