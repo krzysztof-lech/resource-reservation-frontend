@@ -1,0 +1,27 @@
+.admin-user-edit-container {
+  padding: 24px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #f44336);
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
