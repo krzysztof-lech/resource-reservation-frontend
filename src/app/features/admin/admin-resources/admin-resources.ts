@@ -8,6 +8,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ResourceService } from '../../../core/services/resource.service';
 import { ResourceReadDto } from '../../../models/resource.model';
+import { MatDialog } from '@angular/material/dialog';
+import { AdminCategoryDialog } from '../admin-category-dialog/admin-category-dialog';
 
 @Component({
   selector: 'app-admin-resources',
@@ -25,6 +27,7 @@ export class AdminResources implements OnInit {
   private resourceService = inject(ResourceService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
 
   resources = signal<ResourceReadDto[]>([]);
   loading = signal(true);
@@ -75,6 +78,16 @@ export class AdminResources implements OnInit {
         const message = err?.error?.detail || err?.error || 'Failed to delete resource.';
         this.snackBar.open(message, 'Close', { duration: 5000 });
       }
+    });
+  }
+
+  openCategoryDialog(): void {
+    const dialogRef = this.dialog.open(AdminCategoryDialog, {
+      width: '450px'
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadResources();
     });
   }
 }

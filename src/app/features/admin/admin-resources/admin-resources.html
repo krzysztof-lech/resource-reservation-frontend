@@ -21,7 +21,12 @@
       </ng-container>
 
       <ng-container matColumnDef="category">
-        <th mat-header-cell *matHeaderCellDef>Category</th>
+        <th mat-header-cell *matHeaderCellDef>
+          Category
+          <button mat-icon-button (click)="openCategoryDialog()" aria-label="Manage categories" title="Manage categories">
+            <mat-icon>settings</mat-icon>
+          </button>
+        </th>
         <td mat-cell *matCellDef="let r">{{ r.categoryName || '—' }}</td>
       </ng-container>
 

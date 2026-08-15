@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>Manage Categories</h2>
+
+<mat-dialog-content>
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  } @else {
+    <div class="categories-list-scroll">
+        <mat-list>
+            @for (cat of categories(); track cat.id) {
+                <mat-list-item>
+                <span matListItemTitle>{{ cat.name }}</span>
+                <div matListItemMeta>
+                    <button mat-icon-button (click)="startEdit(cat)" aria-label="Edit" title="Edit">
+                    <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="delete(cat)" aria-label="Delete" title="Delete">
+                    <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+                </mat-list-item>
+            } @empty {
+                <p class="empty-message">No categories yet.</p>
+            }
+        </mat-list>
+    </div>
+
+    <div class="add-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ editingId() ? 'Edit category name' : 'New category name' }}</mat-label>
+        <input matInput [formControl]="nameControl" />
+        @if (nameControl.hasError('required') && nameControl.touched) {
+          <mat-error>Name is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="form-actions">
+        @if (editingId()) {
+          <button mat-button type="button" (click)="cancelEdit()">Cancel edit</button>
+        }
+        <button mat-flat-button color="primary" type="button" [disabled]="submitting() || nameControl.invalid" (click)="save()">
+          @if (submitting()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            {{ editingId() ? 'Update' : 'Add' }}
+          }
+        </button>
+      </div>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Close</button>
+</mat-dialog-actions>

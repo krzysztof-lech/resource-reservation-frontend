@@ -1,0 +1,32 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.empty-message {
+  color: var(--mat-sys-on-surface-variant, #666);
+  padding: 8px 16px;
+}
+
+.add-form {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.categories-list-scroll {
+  max-height: 250px;
+  overflow-y: auto;
+}
