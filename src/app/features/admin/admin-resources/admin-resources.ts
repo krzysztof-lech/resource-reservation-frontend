@@ -1,23 +1,30 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ResourceService } from '../../../core/services/resource.service';
 import { ResourceReadDto } from '../../../models/resource.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminCategoryDialog } from '../admin-category-dialog/admin-category-dialog';
+import { Subject, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-admin-resources',
   imports: [
+    FormsModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatProgressSpinnerModule
   ],
   templateUrl: './admin-resources.html',
@@ -35,13 +42,24 @@ export class AdminResources implements OnInit {
 
   displayedColumns = ['name', 'category', 'hours', 'available', 'actions'];
 
+  searchQuery = '';
+  private searchSubject = new Subject<string>();
+
   ngOnInit(): void {
     this.loadResources();
+
+    this.searchSubject.pipe(debounceTime(300)).subscribe(() => {
+      this.loadResources();
+    });
+  }
+
+  onSearchChange(): void {
+    this.searchSubject.next(this.searchQuery);
   }
 
   loadResources(): void {
     this.loading.set(true);
-    this.resourceService.getAll().subscribe({
+    this.resourceService.getAll(this.searchQuery).subscribe({
       next: (data) => {
         this.resources.set(data);
         this.loading.set(false);

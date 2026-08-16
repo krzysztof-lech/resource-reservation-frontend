@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ResourceReadDto, ResourceCreateDto, ResourceUpdateDto } from '../../models/resource.model';
@@ -9,8 +9,12 @@ export class ResourceService {
   private http = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/Resources`;
 
-  getAll(): Observable<ResourceReadDto[]> {
-    return this.http.get<ResourceReadDto[]>(this.baseUrl);
+  getAll(query?: string): Observable<ResourceReadDto[]> {
+    let params = new HttpParams();
+    if (query) {
+      params = params.set('q', query);
+    }
+    return this.http.get<ResourceReadDto[]>(this.baseUrl, { params });
   }
 
   getById(id: string): Observable<ResourceReadDto> {

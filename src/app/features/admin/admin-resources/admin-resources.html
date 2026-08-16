@@ -7,6 +7,12 @@
     </button>
   </div>
 
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search resources</mat-label>
+    <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" placeholder="Search by name or description" />
+    <mat-icon matIconSuffix>search</mat-icon>
+  </mat-form-field>
+
   @if (loading()) {
     <div class="loading-container">
       <mat-spinner diameter="40"></mat-spinner>
