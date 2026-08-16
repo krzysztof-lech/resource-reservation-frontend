@@ -1,5 +1,17 @@
 <div class="resource-list-container">
-  <h1>Resources</h1>
+  <div class="header-row">
+    <h1>Resources</h1>
+    <button mat-icon-button (click)="toggleSearch()" aria-label="Search" title="Search">
+        <mat-icon>search</mat-icon>
+    </button>
+  </div>
+
+  @if (searchOpen()) {
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search resources</mat-label>
+      <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" autofocus />
+    </mat-form-field>
+  }
 
   @if (loading()) {
   <div class="loading-container">
