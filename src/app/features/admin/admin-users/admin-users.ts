@@ -1,22 +1,29 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../../core/services/user.service';
 import { UserReadDto } from '../../../models/user.model';
 import { DatePipe } from '@angular/common';
+import { Subject, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-admin-users',
   imports: [
+    FormsModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatProgressSpinnerModule,
     DatePipe
   ],
@@ -34,13 +41,24 @@ export class AdminUsers implements OnInit {
 
   displayedColumns = ['name', 'email', 'role', 'createdAt', 'actions'];
 
+  searchQuery = '';
+  private searchSubject = new Subject<string>();
+
   ngOnInit(): void {
     this.loadUsers();
+
+    this.searchSubject.pipe(debounceTime(300)).subscribe(() => {
+      this.loadUsers();
+    });
+  }
+
+  onSearchChange(): void {
+    this.searchSubject.next(this.searchQuery);
   }
 
   loadUsers(): void {
     this.loading.set(true);
-    this.userService.getAll().subscribe({
+    this.userService.getAll(this.searchQuery).subscribe({
       next: (data) => {
         this.users.set(data);
         this.loading.set(false);

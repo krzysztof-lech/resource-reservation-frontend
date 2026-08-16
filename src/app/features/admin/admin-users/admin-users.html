@@ -1,6 +1,12 @@
 <div class="admin-users-container">
   <h1>Manage Users</h1>
 
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search users</mat-label>
+    <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
+    <mat-icon matIconSuffix>search</mat-icon>
+  </mat-form-field>
+
   @if (loading()) {
     <div class="loading-container">
       <mat-spinner diameter="40"></mat-spinner>
