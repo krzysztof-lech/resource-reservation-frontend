@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { ReservationService } from '../../../core/services/reservation.service';
 import { IReservationReadDto } from '../../../models/reservation.model';
+import { extractErrorMessage } from '../../../core/utils/error-utils';
 
 @Component({
   selector: 'app-admin-reservations',
@@ -65,6 +66,10 @@ export class AdminReservations implements OnInit {
     return reservation.status !== 'Cancelled' && new Date(reservation.startTime) > new Date();
   }
 
+  canConfirm(reservation: IReservationReadDto): boolean {
+    return reservation.status === 'Pending';
+  }
+
   cancelReservation(id: string): void {
     const confirmed = confirm('Cancel this reservation?');
     if (!confirmed) return;
@@ -76,6 +81,19 @@ export class AdminReservations implements OnInit {
       },
       error: (err) => {
         const message = err?.error?.detail || err?.error || 'Failed to cancel reservation.';
+        this.snackBar.open(message, 'Close', { duration: 5000 });
+      }
+    });
+  }
+
+  confirmReservation(id: string): void {
+    this.reservationService.confirm(id).subscribe({
+      next: () => {
+        this.snackBar.open('Reservation confirmed.', 'Close', { duration: 3000 });
+        this.loadReservations();
+      },
+      error: (err) => {
+        const message = extractErrorMessage(err, 'Failed to confirm reservation.');
         this.snackBar.open(message, 'Close', { duration: 5000 });
       }
     });

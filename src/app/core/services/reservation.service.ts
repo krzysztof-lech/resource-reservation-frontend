@@ -37,4 +37,8 @@ export class ReservationService {
   cancel(id: string): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/${id}/cancel`, {});
   }
+
+  confirm(id: string): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${id}/confirm`, {});
+  }
 }
