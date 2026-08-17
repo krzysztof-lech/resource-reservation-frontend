@@ -120,7 +120,7 @@ export class ResourceDetail implements OnInit {
         return cursor < rEnd && slotEnd > rStart;
       });
 
-      const isPast = slotEnd <= new Date();
+      const isPast = cursor <= new Date();
 
       result.push({
         start: new Date(cursor),
