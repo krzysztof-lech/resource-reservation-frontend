@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ResourceService } from '../../../core/services/resource.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { CategoryReadDto } from '../../../models/category.model';
+import { extractErrorMessage } from '../../../core/utils/error-utils';
 
 const DAYS = [
   { value: 1, label: 'Monday' },
@@ -99,7 +100,7 @@ export class AdminResourceNew implements OnInit{
       },
       error: (err) => {
         this.submitting.set(false);
-        const message = err?.error?.detail || err?.error || 'Failed to create resource.';
+        const message = extractErrorMessage(err, 'Failed to create resource.');
         this.snackBar.open(message, 'Close', { duration: 5000 });
       }
     });

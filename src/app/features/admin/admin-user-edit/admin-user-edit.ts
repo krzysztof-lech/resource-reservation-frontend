@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../../core/services/user.service';
+import { extractErrorMessage } from '../../../core/utils/error-utils';
 
 @Component({
   selector: 'app-admin-user-edit',
@@ -92,7 +93,7 @@ export class AdminUserEdit implements OnInit{
       },
       error: (err) => {
         this.submitting.set(false);
-        const message = err?.error?.detail || err?.error || 'Failed to update user.';
+        const message = extractErrorMessage(err, 'Failed to update user.');
         this.snackBar.open(message, 'Close', { duration: 5000 });
       }
     });
