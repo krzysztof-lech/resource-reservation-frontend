@@ -17,4 +17,5 @@ export const routes: Routes = [
     loadChildren: () => import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES)
   },
   { path: '', redirectTo: 'resources', pathMatch: 'full' },
+  { path: '**', redirectTo: 'resources' },
 ];
