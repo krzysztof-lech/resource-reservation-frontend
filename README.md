@@ -1,59 +1,121 @@
-# ResourceReservationFrontend
+# Resource Reservation Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.20.
+## Overview
+Resource Reservation Frontend is the client-side application for the Resource Reservation system, built with Angular 21 and Angular Material. It allows anyone to browse available resources (meeting rooms, equipment, and shared spaces) and check real-time availability, while authenticated users can make and manage reservations. Admins get a full management panel to control resources, categories, users, and the entire reservation lifecycle.
 
-## Development server
+> The backend REST API (ASP.NET Core 10) is available here: [Resource Reservation API](https://github.com/krzysztof-lech/resource-reservation-api)
 
-To start a local development server, run:
+## Technologies
+
+- Angular 21 (standalone components, signals)
+- Angular Material
+- TypeScript
+- RxJS
+- Angular HTTP Client with JWT interceptor
+
+## Features
+
+- JWT authentication with automatic token handling and role decoding
+- Role-based access control (User, Admin)
+- Public browsing — anyone can view resources and check availability without logging in
+- Interactive availability calendar with multi-slot selection for a single reservation
+- Full reservation lifecycle: **Pending → Confirmed → Cancelled**
+- Guest-to-login flow — unauthenticated users are redirected to log in only when confirming a reservation, then returned to their selection
+- Admin panel:
+  - Resource management (create, edit, delete, toggle availability)
+  - Category management via an in-context dialog
+  - User management, including role changes
+  - Full reservation overview with status filtering and manual confirmation/cancellation
+- Debounced search across resources and users
+- Route guards protecting views based on authentication and role
+
+## Project structure
+
+```
+src/
+├── app/
+│ ├── core/
+│ │ ├── guards/ # auth.guard, admin.guard
+│ │ ├── interceptors/ # JWT auth interceptor
+│ │ ├── services/ # auth, resource, category, reservation, user
+│ │ └── utils/ # shared error-message extraction
+│ ├── features/
+│ │ ├── auth/
+│ │ │ └── login/
+│ │ ├── resources/
+│ │ │ ├── resource-list/ # public resource browsing
+│ │ │ └── resource-detail/ # availability calendar & booking
+│ │ ├── reservations/
+│ │ │ └── my-reservations/ # logged-in user's own reservations
+│ │ └── admin/
+│ │ ├── admin.routes.ts # admin section routing (lazy-loaded)
+│ │ ├── admin-resources/
+│ │ ├── admin-resource-new/
+│ │ ├── admin-resource-edit/
+│ │ ├── admin-category-dialog/
+│ │ ├── admin-users/
+│ │ ├── admin-user-edit/
+│ │ └── admin-reservations/
+│ ├── models/ # TypeScript interfaces matching backend DTOs
+│ ├── shared/
+│ │ └── nav-bar/ # role-aware navigation, admin mode toggle
+│ └── app.routes.ts
+└── environments/
+```
+## Routing
+
+
+| Path | Component | Access |
+|---|---|---|
+| `/login` | Login | Public |
+| `/resources` | ResourceList | Public |
+| `/resources/:id` | ResourceDetail | Public (login required to confirm a reservation) |
+| `/reservations/my` | MyReservations | Authenticated |
+| `/admin/resources` | AdminResources | Admin only |
+| `/admin/resources/new` | AdminResourceNew | Admin only |
+| `/admin/resources/:id/edit` | AdminResourceEdit | Admin only |
+| `/admin/reservations` | AdminReservations | Admin only |
+| `/admin/users` | AdminUsers | Admin only |
+| `/admin/users/:id/edit` | AdminUserEdit | Admin only |
+
+## Getting Started
+### Prerequisites
+- Node.js (v20.19+ recommended)
+- Angular CLI 21
 
 ```bash
-ng serve
+npm install -g @angular/cli
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Installation
+```bash
+# Clone the repository
+git clone https://github.com/krzysztof-lech/resource-reservation-frontend.git
+cd resource-reservation-frontend
 
-## Code scaffolding
+# Install dependencies
+npm install
+```
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Configuration
+
+The application expects the backend API to be running locally. Check `src/environments/environment.ts` and adjust the API URL if needed:
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'https://localhost:7174/api'
+};
+```
+
+### Running the Application
 
 ```bash
-ng generate component component-name
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+The app will be available at http://localhost:4200.
 
-```bash
-ng generate --help
-```
+## Related Repository
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- 🔗 **[Resource Reservation API (Backend)](https://github.com/krzysztof-lech/resource-reservation-api)** — ASP.NET Core 10 REST API implementation
