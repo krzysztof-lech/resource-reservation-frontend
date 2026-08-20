@@ -16,6 +16,18 @@
   margin-top: 8px;
 }
 
+.category-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+
+  button.selected {
+    background-color: #1976d2;
+    color: white;
+  }
+}
+
 .loading-container {
   display: flex;
   justify-content: center;

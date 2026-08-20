@@ -13,6 +13,27 @@
     </mat-form-field>
   }
 
+  @if (categories().length > 0) {
+    <div class="category-filter">
+      <button
+        mat-stroked-button
+        [class.selected]="selectedCategoryId() === null"
+        (click)="selectCategory(null)"
+      >
+        All
+      </button>
+      @for (cat of categories(); track cat.id) {
+        <button
+          mat-stroked-button
+          [class.selected]="selectedCategoryId() === cat.id"
+          (click)="selectCategory(cat.id)"
+        >
+          {{ cat.name }}
+        </button>
+      }
+    </div>
+  }
+
   @if (loading()) {
   <div class="loading-container">
     <mat-spinner diameter="40"></mat-spinner>

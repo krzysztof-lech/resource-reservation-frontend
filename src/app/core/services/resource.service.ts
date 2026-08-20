@@ -9,10 +9,13 @@ export class ResourceService {
   private http = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/Resources`;
 
-  getAll(query?: string): Observable<ResourceReadDto[]> {
+  getAll(query?: string, categoryId?: number): Observable<ResourceReadDto[]> {
     let params = new HttpParams();
     if (query) {
       params = params.set('q', query);
+    }
+    if (categoryId !== undefined) {
+      params = params.set('categoryId', categoryId);
     }
     return this.http.get<ResourceReadDto[]>(this.baseUrl, { params });
   }

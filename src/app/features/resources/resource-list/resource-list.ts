@@ -9,7 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { ResourceService } from '../../../core/services/resource.service';
+import { CategoryService } from '../../../core/services/category.service';
 import { ResourceReadDto } from '../../../models/resource.model';
+import { CategoryReadDto } from '../../../models/category.model';
 import { Subject, debounceTime } from 'rxjs';
 
 @Component({
@@ -29,27 +31,38 @@ import { Subject, debounceTime } from 'rxjs';
 })
 export class ResourceList implements OnInit {
   private resourceService = inject(ResourceService);
+  private categoryService = inject(CategoryService);
   private router = inject(Router);
 
   resources = signal<ResourceReadDto[]>([]);
+  categories = signal<CategoryReadDto[]>([]);
   loading = signal(true);
   errorMessage = signal<string | null>(null);
 
   searchOpen = signal(false);
   searchQuery = '';
+  selectedCategoryId = signal<number | null>(null);
   private searchSubject = new Subject<string>();
 
   ngOnInit(): void {
     this.loadResources();
+    this.loadCategories();
 
     this.searchSubject.pipe(debounceTime(300)).subscribe(() => {
       this.loadResources();
     });
   }
 
+  loadCategories(): void {
+    this.categoryService.getAll().subscribe({
+      next: (cats) => this.categories.set(cats)
+    });
+  }
+
   loadResources(): void {
     this.loading.set(true);
-    this.resourceService.getAll(this.searchQuery).subscribe({
+    const categoryId = this.selectedCategoryId() ?? undefined;
+    this.resourceService.getAll(this.searchQuery, categoryId).subscribe({
       next: (data) => {
         this.resources.set(data.filter(r => r.isAvailable));
         this.loading.set(false);
@@ -59,6 +72,11 @@ export class ResourceList implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  selectCategory(categoryId: number | null): void {
+    this.selectedCategoryId.set(categoryId);
+    this.loadResources();
   }
 
   onSearchChange(): void {
