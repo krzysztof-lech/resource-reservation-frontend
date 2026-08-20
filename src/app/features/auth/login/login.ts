@@ -1,6 +1,6 @@
 import { Component, signal, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-login',
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -29,6 +30,7 @@ export class Login {
 
   loading = signal(false);
   errorMessage = signal<string | null>(null);
+  justRegistered = signal(this.route.snapshot.queryParamMap.get('registered') === 'true');
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
