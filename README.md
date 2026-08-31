@@ -99,7 +99,7 @@ npm install
 
 ### Configuration
 
-The application expects the backend API to be running locally. Check `src/environments/environment.ts` and adjust the API URL if needed:
+By default, the application expects the backend API to be running locally (see `src/environments/environment.ts`). A separate configuration is available for a backend running via Docker — see "Running the Application" below.
 
 ```typescript
 export const environment = {
@@ -110,11 +110,18 @@ export const environment = {
 
 ### Running the Application
 
+If the backend is running locally (via `dotnet run`, using `https://localhost:7174`):
 ```bash
 npm start
 ```
 
-The app will be available at http://localhost:4200.
+If the backend is running via Docker (see [backend README](https://github.com/krzysztof-lech/resource-reservation-api), using `http://localhost:5000`):
+```bash
+ng serve --configuration=docker
+```
+This uses `src/environments/environment.docker.ts` instead of the default `environment.ts`.
+
+Either way, the app will be available at http://localhost:4200.
 
 ## Related Repository
 
