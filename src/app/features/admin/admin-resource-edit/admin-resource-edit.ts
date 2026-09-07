@@ -112,12 +112,18 @@ export class AdminResourceEdit implements OnInit {
       return;
     }
 
-    this.submitting.set(true);
     const raw = this.resourceForm.getRawValue();
 
     const allowedDays = DAYS
       .filter((_, index) => raw.allowedDays[index])
       .map(d => d.value);
+
+    if (raw.isAvailable && allowedDays.length === 0) {
+      this.snackBar.open('Select at least one allowed day to mark this resource as available.', 'Close', { duration: 5000 });
+      return;
+    }
+
+    this.submitting.set(true);
 
     this.resourceService.update(this.resourceId, {
       name: raw.name!,

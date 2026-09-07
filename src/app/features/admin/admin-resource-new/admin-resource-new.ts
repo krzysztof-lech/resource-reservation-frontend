@@ -56,7 +56,7 @@ export class AdminResourceNew implements OnInit{
   resourceForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
     description: [''],
-    isAvailable: [true],
+    isAvailable: [false],
     slotDurationMinutes: [30, [Validators.required, Validators.min(1)]],
     availableFrom: ['08:00', [Validators.required]],
     availableTo: ['17:00', [Validators.required]],
@@ -76,12 +76,18 @@ export class AdminResourceNew implements OnInit{
       return;
     }
 
-    this.submitting.set(true);
     const raw = this.resourceForm.getRawValue();
 
     const allowedDays = DAYS
       .filter((_, index) => raw.allowedDays[index])
       .map(d => d.value);
+
+    if (raw.isAvailable && allowedDays.length === 0) {
+      this.snackBar.open('Select at least one allowed day to mark this resource as available.', 'Close', { duration: 5000 });
+      return;
+    }
+
+    this.submitting.set(true);
 
     this.resourceService.create({
       name: raw.name!,
