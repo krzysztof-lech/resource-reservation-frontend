@@ -31,6 +31,12 @@
   width: 100%;
 }
 
+.days-label {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant, #666);
+  margin-top: 2px;
+}
+
 mat-chip.available {
   --mdc-chip-elevated-container-color: #e8f5e9;
   color: #2e7d32;

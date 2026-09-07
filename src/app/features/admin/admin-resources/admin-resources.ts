@@ -75,6 +75,18 @@ export class AdminResources implements OnInit {
     return time.slice(0, 5);
   }
 
+  
+  formatDays(allowedDays: number[]): string {
+    const dayLabels: Record<number, string> = {
+      1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat', 0: 'Sun'
+    };
+    const order = [1, 2, 3, 4, 5, 6, 0];
+    return order
+      .filter(d => allowedDays.includes(d))
+      .map(d => dayLabels[d])
+      .join(', ');
+  }
+
   addNew(): void {
     this.router.navigate(['/admin/resources/new']);
   }
