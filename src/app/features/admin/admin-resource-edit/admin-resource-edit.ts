@@ -13,7 +13,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ResourceService } from '../../../core/services/resource.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { CategoryReadDto } from '../../../models/category.model';
+import { ResourceImageDto } from '../../../models/resource.model';
 import { extractErrorMessage } from '../../../core/utils/error-utils';
+import { environment } from '../../../../environments/environment';
+import { MatIconModule } from '@angular/material/icon';
 
 const DAYS = [
   { value: 1, label: 'Monday' },
@@ -36,7 +39,8 @@ const DAYS = [
     MatSlideToggleModule,
     MatCheckboxModule,
     MatButtonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatIconModule
   ],
   templateUrl: './admin-resource-edit.html',
   styleUrl: './admin-resource-edit.scss',
@@ -53,7 +57,10 @@ export class AdminResourceEdit implements OnInit {
   submitting = signal(false);
   errorMessage = signal<string | null>(null);
   categories = signal<CategoryReadDto[]>([]);
+  images = signal<ResourceImageDto[]>([]);
+  uploadingImage = signal(false);
   resourceId = '';
+  apiBaseUrl = environment.apiUrl.replace('/api', '');
 
   days = DAYS;
 
@@ -97,6 +104,7 @@ export class AdminResourceEdit implements OnInit {
           allowedDaysArray.at(index).setValue(res.allowedDays.includes(day.value));
         });
 
+        this.images.set(res.images);
         this.loading.set(false);
       },
       error: () => {
@@ -150,5 +158,48 @@ export class AdminResourceEdit implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/admin/resources']);
+  }
+
+  imageUrl(image: ResourceImageDto): string {
+    return `${this.apiBaseUrl}${image.url}`;
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.uploadingImage.set(true);
+
+    this.resourceService.uploadImage(this.resourceId, file).subscribe({
+      next: (image) => {
+        this.images.update(imgs => [...imgs, image]);
+        this.uploadingImage.set(false);
+        this.snackBar.open('Image uploaded successfully.', 'Close', { duration: 3000 });
+        input.value = '';
+      },
+      error: (err) => {
+        this.uploadingImage.set(false);
+        const message = extractErrorMessage(err, 'Failed to upload image.');
+        this.snackBar.open(message, 'Close', { duration: 5000 });
+        input.value = '';
+      }
+    });
+  }
+
+  deleteImage(image: ResourceImageDto): void {
+    const confirmed = confirm('Delete this image?');
+    if (!confirmed) return;
+
+    this.resourceService.deleteImage(this.resourceId, image.id).subscribe({
+      next: () => {
+        this.images.update(imgs => imgs.filter(i => i.id !== image.id));
+        this.snackBar.open('Image deleted.', 'Close', { duration: 3000 });
+      },
+      error: (err) => {
+        const message = extractErrorMessage(err, 'Failed to delete image.');
+        this.snackBar.open(message, 'Close', { duration: 5000 });
+      }
+    });
   }
 }

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ResourceReadDto, ResourceCreateDto, ResourceUpdateDto } from '../../models/resource.model';
+import { ResourceReadDto, ResourceCreateDto, ResourceUpdateDto, ResourceImageDto } from '../../models/resource.model';
 
 @Injectable({ providedIn: 'root' })
 export class ResourceService {
@@ -34,5 +34,15 @@ export class ResourceService {
 
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  uploadImage(resourceId: string, file: File): Observable<ResourceImageDto> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<ResourceImageDto>(`${this.baseUrl}/${resourceId}/images`, formData);
+  }
+
+  deleteImage(resourceId: string, imageId: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${resourceId}/images/${imageId}`);
   }
 }

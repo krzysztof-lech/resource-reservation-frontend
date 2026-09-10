@@ -63,6 +63,53 @@
             }
           </div>
 
+          <div class="images-section">
+            <p class="images-label">Images</p>
+
+            @if (images().length > 0) {
+              <div class="images-grid">
+                @for (image of images(); track image.id) {
+                  <div class="image-thumb">
+                    <img [src]="imageUrl(image)" alt="Resource image" />
+                    <button
+                      mat-icon-button
+                      type="button"
+                      class="delete-image-button"
+                      (click)="deleteImage(image)"
+                      aria-label="Delete image"
+                      title="Delete image"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+
+            <input
+              #fileInput
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              hidden
+              (change)="onFileSelected($event)"
+            />
+            <button
+              mat-stroked-button
+              type="button"
+              [disabled]="uploadingImage()"
+              (click)="fileInput.click()"
+            >
+              @if (uploadingImage()) {
+                <mat-spinner diameter="20"></mat-spinner>
+              } @else {
+                <ng-container>
+                  <mat-icon>add_photo_alternate</mat-icon>
+                  Add image
+                </ng-container>
+              }
+            </button>
+          </div>
+
           <div class="actions">
             <button mat-button type="button" (click)="cancel()">Cancel</button>
             <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">

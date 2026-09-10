@@ -1,3 +1,9 @@
+export interface ResourceImageDto {
+  id: string;
+  url: string;
+  displayOrder: number;
+}
+
 export interface ResourceReadDto {
   id: string;
   name: string;
@@ -9,6 +15,7 @@ export interface ResourceReadDto {
   allowedDays: number[]; 
   categoryId: number | null;
   categoryName: string | null;
+  images: ResourceImageDto[];
 }
 
 export interface ResourceCreateDto {
