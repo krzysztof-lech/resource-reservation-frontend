@@ -9,12 +9,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
 import { ResourceService } from '../../../core/services/resource.service';
 import { ReservationService } from '../../../core/services/reservation.service';
 import { ResourceReadDto } from '../../../models/resource.model';
 import { IReservationReadDto } from '../../../models/reservation.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { DatePipe } from '@angular/common';
+import { environment } from '../../../../environments/environment';
+import { extractErrorMessage } from '../../../core/utils/error-utils';
 
 interface TimeSlot {
   start: Date;
@@ -34,6 +37,7 @@ interface TimeSlot {
     MatInputModule,
     MatDatepickerModule,
     MatProgressSpinnerModule,
+    MatIconModule,
     DatePipe
   ],
   templateUrl: './resource-detail.html',
@@ -58,6 +62,7 @@ export class ResourceDetail implements OnInit {
   selectedSlots = signal<TimeSlot[]>([]);
 
   resourceId = '';
+  apiBaseUrl = environment.apiUrl.replace('/api', '');
 
   slots = computed<TimeSlot[]>(() => {
     const res = this.resource();
@@ -259,7 +264,7 @@ export class ResourceDetail implements OnInit {
       },
       error: (err) => {
         this.submitting.set(false);
-        const message = err?.error?.detail || err?.error || 'Failed to create reservation.';
+        const message = extractErrorMessage(err, 'Failed to create reservation.');
         this.snackBar.open(message, 'Close', { duration: 5000 });
       }
     });
@@ -311,5 +316,23 @@ export class ResourceDetail implements OnInit {
     }
 
     return today;
+  }
+
+  imageUrl(url: string): string {
+    return `${this.apiBaseUrl}${url}`;
+  }
+
+  currentImageIndex = signal(0);
+
+  nextImage(imagesCount: number): void {
+    this.currentImageIndex.update(i => (i + 1) % imagesCount);
+  }
+
+  prevImage(imagesCount: number): void {
+    this.currentImageIndex.update(i => (i - 1 + imagesCount) % imagesCount);
+  }
+
+  goToImage(index: number): void {
+    this.currentImageIndex.set(index);
   }
 }

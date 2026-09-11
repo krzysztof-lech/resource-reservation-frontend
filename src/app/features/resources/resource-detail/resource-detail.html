@@ -79,5 +79,35 @@
             }
         </mat-card-content>
     </mat-card>
+    @if (res.images.length > 0) {
+    <mat-card class="images-card">
+        <mat-card-content>
+            <div class="carousel">
+                <img [src]="imageUrl(res.images[currentImageIndex()].url)" alt="{{ res.name }} photo"
+                    class="carousel-image" />
+
+                @if (res.images.length > 1) {
+                <button type="button" class="carousel-nav carousel-prev" (click)="prevImage(res.images.length)"
+                    aria-label="Previous photo">
+                    <mat-icon>chevron_left</mat-icon>
+                </button>
+                <button type="button" class="carousel-nav carousel-next" (click)="nextImage(res.images.length)"
+                    aria-label="Next photo">
+                    <mat-icon>chevron_right</mat-icon>
+                </button>
+                }
+            </div>
+
+            @if (res.images.length > 1) {
+            <div class="carousel-dots">
+                @for (image of res.images; track image.id; let i = $index) {
+                <button type="button" class="carousel-dot" [class.active]="i === currentImageIndex()"
+                    (click)="goToImage(i)" aria-label="Go to photo {{ i + 1 }}"></button>
+                }
+            </div>
+            }
+        </mat-card-content>
+    </mat-card>
+    }
     }
 </div>
